@@ -7,6 +7,7 @@ import com.example.jwtauth.seguretat.jwt.JwtProvider;
 import com.example.jwtauth.seguretat.jwt.LoginPassword;
 import com.example.jwtauth.seguretat.jwt.UsuariJwt;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,13 +45,34 @@ public class ControladorRegistreLoginUsuaris {
                 .body(usu2);
     }
 
-
     @GetMapping("/login")
     public UsuariConsultaDTO login(@AuthenticationPrincipal Usuari usu){
         UsuariConsultaDTO usu2=new UsuariConsultaDTO(usu.getUsername(),usu.getAvatar(),usu.getRol());
         return usu2;
     }
 
+    @PostMapping("/usuaris")
+    public ResponseEntity<?> nouUsuari(@RequestBody Usuari nouUsuari) {
+        try {
+            Usuari res = serveiUsuaris.crearNouUsuari(nouUsuari);
+            UsuariConsultaDTO usu = new UsuariConsultaDTO(res.getUsername(), res.getAvatar(), res.getRol());
+            return new ResponseEntity<UsuariConsultaDTO>(usu, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException ex) {
+            //per si intentem afegir 2 usuaris amb el mateix username, saltarà excepció
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
+    }
 
+    @GetMapping("/usuaris")
+    public ResponseEntity<?> llistarUsuarisDTO() {
+        List<Usuari> res = serveiUsuaris.llistarUsuaris();
+        List<UsuariConsultaDTO> aux = new ArrayList();
+        for (Usuari usu : res) {
+            aux.add(new UsuariConsultaDTO(usu.getUsername(), usu.getAvatar(), usu.getRol()));
+        }
+        if (res.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else return ResponseEntity.ok(aux);
+    }
 
 }
