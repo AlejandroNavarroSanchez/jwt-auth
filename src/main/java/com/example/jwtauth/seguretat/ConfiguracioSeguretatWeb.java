@@ -74,9 +74,6 @@ public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
     "Pepi", "1234"
      */
 
-
-    /* mirar: https://www.adictosaltrabajo.com/2017/09/25/securizar-un-api-rest-utilizando-json-web-tokens/
-     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
