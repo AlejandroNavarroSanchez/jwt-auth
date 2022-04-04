@@ -1,0 +1,4 @@
+2022-04-04 11:04:35 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM USUARI VIDEOJOC USUARI[*]"
+Syntax error in SQL statement "SELECT * FROM USUARI VIDEOJOC USUARI[*]"; SQL statement:
+SELECT * FROM USUARI VIDEOJOC USUARI [42000-200]
